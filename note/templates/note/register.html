@@ -1,0 +1,30 @@
+{%extends 'base.html'%}
+
+{%block head_title%}
+	Login
+{% endblock %}
+
+{%block notes%}
+	<form action="" method="post" accept-charset="utf-8">
+		{% csrf_token %}
+		{% for er in form.non_field_errors %}
+			<div class="errors">{{ er }}</div>
+		{% endfor %}
+		<fieldset>
+			{% for field in form %}
+				<div class="field_reg_label_{% if field.error %}er{% endif%}">
+					{{field.label}}
+				</div>
+				<div class="field_reg_input">
+					{{field}}
+				</div>
+			{% endfor %}
+		</fieldset>		
+		<button type="submit"> Регистрация </button>
+	</form>	
+	{% for s in data%}
+		<div>
+			{{s}}
+		</div>
+	{%endfor%}
+{%endblock%}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+	{% for notes in notes %}
+		<a href='{{ notes.get_absolute_url }}'>{{ notes.title }}</a><br>
+	{% endfor %}
+{% endblock %}
+
+
+{% block notes %}
+	{% for notes in notes %}
+		<div>
+			<p><a href='{{ notes.get_absolute_url }}'> {{ notes.title }}</a></p>
+			<p>{{ notes.body }}</p>
+		</div>
+	{% endfor %}
+{% endblock %}

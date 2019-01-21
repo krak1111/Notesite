@@ -1,0 +1,134 @@
+body{
+	background-color: #f9a9fa;
+	padding-top: 10vh;
+	padding-left: 5vw;
+	padding-right: 5vw;
+	display: grid;
+	grid-template-areas: 
+		"header header menu_main"
+		"menu_navigation article article"
+		"footer footer footer";
+	grid-template-rows: 60px 1fr 200px;
+	grid-template-columns: 2fr 4fr 4fr;
+	grid-gap: .1vw;
+	margin: 0;
+}
+
+#head_title{
+	grid-area: header;
+	font-size: 35px;
+	text-align: center;
+	padding-top: 2px;
+
+}
+
+#menu_main{
+	grid-area: menu_main;
+	font-size: 14px;
+	display: grid;
+	padding: none;
+	grid-template-columns: repeat(4,1fr);
+	grid-gap: 0;
+}
+
+#menu_navigation{
+	grid-area: menu_navigation;
+	font-size: 1.2vw;
+	text-align: left;
+	padding-top: 50px;
+}
+
+#content{
+	grid-area: article;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(600px,2fr));
+	grid-gap:.2vw;
+	text-align: center;
+	padding-top: 50px;
+}
+
+
+#footer{
+	grid-area: footer;
+	font-size: 10vw;
+	text-align: center;
+}
+
+#menu_main > div{
+	font-size: 20px;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 15px;
+	border-left: 1px solid black; 
+}
+#menu_main >a{
+	padding-top: 0px;
+	font-size: 20px;
+}
+#content >div{
+	
+	border: 1px solid black;
+}
+
+@media screen and (max-width: 1000px) {
+
+	body{
+		padding-top: 0vh;
+		padding-left: 0vw;
+		padding-right: 0vw;
+		display: grid;
+		grid-template-areas: 
+			"header header header header header "
+			"menu_navigation menu_main menu_main menu_main menu_main"
+			"article article article article article"
+			"footer footer footer footer footer";
+		grid-template-rows: 100px 50px 1fr 100px;	
+		grid-template-columns: repeat(5, 1fr);	
+		grid-gap: .1vh;
+	}
+
+	#head_title{
+		grid-area: header;
+		font-size: 40px;
+		text-align: center;
+		padding-top: 15px;
+	}
+
+	#menu_main{
+		grid-area: menu_main;
+		font-size: 12px;
+		display: grid;
+		padding: none;
+		grid-template-columns: repeat(4,1fr);
+		grid-gap: 0;
+	}
+
+	#menu_navigation{
+		grid-area: menu_navigation;
+		font-size: 10px;
+		padding-top: 15px;
+		width: 1fr;
+		text-align: center;
+	}
+
+	#content{
+		grid-area: article;		
+		font-size: 3vw;
+		display: grid;
+		grid-template-columns: repeat(1fr);
+		grid-gap:.2vw;
+		text-align: center;
+	}
+
+	#footer{
+		grid-area: footer;
+		font-size: 10vw;
+		text-align: center;
+	}
+
+	#menu_main > div{
+		font-size: 15px;
+		text-align: center;
+		padding-top: 15px;
+	}
+}

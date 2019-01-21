@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block head_title%}
+	Login
+{% endblock %}
+
+{%block notes%}
+	<form action="login" method="post" accept-charset="utf-8">
+		{%csrf_token%}
+		<fieldset>
+			{{form.as_p}}
+		</fieldset>		
+		<input type="submit" value="Submit">
+		<a href="{% url 'user_registration'%}">Registration</a>
+	</form>	
+{%endblock%}

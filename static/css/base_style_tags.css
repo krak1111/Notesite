@@ -1,0 +1,19 @@
+a:link{
+	text-decoration: none;
+	color: black;
+}
+a:visited{
+	text-decoration: none;
+	color: black;
+}
+a:active{
+	text-decoration: none;
+	color: black;
+}
+#menu_navigation>a{
+	padding-left: 15px;
+}
+
+#field_reg_label_er{
+	background-color: #fff;
+}
