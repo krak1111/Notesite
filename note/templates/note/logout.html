@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block notes %}
+	<form action="/note/logout/" method="post" accept-charset="utf-8">
+		{% csrf_token %}
+		<button type = "submit">Log Out</button>
+		
+	</form>
+{% endblock%}

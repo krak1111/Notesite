@@ -5,26 +5,29 @@
 {% endblock %}
 
 {%block notes%}
-	<form action="" method="post" accept-charset="utf-8">
+	<form action="{% url 'user_registration' %}" method="post" accept-charset="utf-8">
 		{% csrf_token %}
 		{% for er in form.non_field_errors %}
-			<div class="errors">{{ er }}</div>
+			<div id="errors">{{ er }}</div>
 		{% endfor %}
 		<fieldset>
 			{% for field in form %}
-				<div class="field_reg_label_{% if field.error %}er{% endif%}">
-					{{field.label}}
+				<div id="field_label">
+					<div id="label_text">
+						{{field.label}}
+					</div>
+					<div id="lable_error">
+						{% if field.errors%}
+							{{field.errors.as_text}}
+						{% endif %}
+					</div>
+					
 				</div>
-				<div class="field_reg_input">
+				<div id="field_reg_input">
 					{{field}}
 				</div>
 			{% endfor %}
 		</fieldset>		
 		<button type="submit"> Регистрация </button>
 	</form>	
-	{% for s in data%}
-		<div>
-			{{s}}
-		</div>
-	{%endfor%}
 {%endblock%}

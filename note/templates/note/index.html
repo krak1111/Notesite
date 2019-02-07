@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 
-{% block navigation %}
-	{% for notes in notes %}
-		<a href='{{ notes.get_absolute_url }}'>{{ notes.title }}</a><br>
-	{% endfor %}
-{% endblock %}
+{% include 'navigation.html'%}
 
 
 {% block notes %}

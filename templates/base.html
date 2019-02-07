@@ -22,20 +22,29 @@
 		<a href="/note"><div>Home</div></a>
 		<a href=""><div>FAQ</div></a>
 		<a href=""><div>About</div></a>
-		{% block user %}
-			<a href="{% url 'user_login' %}"><div>Log In</div></a>
-		{% endblock %}
+		
+			{% if user.is_authenticated  %}
+				<div>
+					<div>{{user.username}}</div>
+					<div id="logout"><a href="{% url 'logout'%}">Log out</a></div>
+				</div>
+			{% else %}
+				<a href="{% url 'user_login' %}"><div>Log In</div></a>
+			{% endif %}
+		
 	</nav>
 	<nav id="menu_navigation">
-		Navigation<br>
 		{% block navigation %}
-					
+				Navigation<br>
+			{% for n in notes %}
+				<a href='{{ n.get_absolute_url }}'>{{ n.title }}</a><br>
+			{% endfor %}
+	
 		{% endblock %}
 	</nav>
 	<article id="content">
 		{% block notes %}
-			Here must be your Notes
-		{% endblock %}
+					{% endblock %}
 	</article>
 	<footer id="footer">
 		Foot content

@@ -14,6 +14,11 @@ a:active{
 	padding-left: 15px;
 }
 
-#field_reg_label_er{
+#lable_text{
 	background-color: #fff;
+	font-size: 25px;
+}
+
+#lable_error{
+	background-color: #f00;
 }

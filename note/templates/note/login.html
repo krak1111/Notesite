@@ -5,12 +5,25 @@
 {% endblock %}
 
 {%block notes%}
-	<form action="login" method="post" accept-charset="utf-8">
+	<form action="{% url 'user_login' %}" method="post" accept-charset="utf-8">
 		{%csrf_token%}
+		{% if error %}
+			<div id="error">Wrong Username or Password </div>
+		{% endif %}
+		{% for er in form.non_field_errors %}
+			<div id="errors">{{ er }}</div>
+		{% endfor %}
 		<fieldset>
-			{{form.as_p}}
+			{% for field in form %}
+				<div id="field_reg_label{% if field.error %}_er{% endif%}">
+					{{field.label}}
+				</div>
+				<div id="field_reg_input">
+					{{field}}
+				</div>
+			{% endfor %}
 		</fieldset>		
-		<input type="submit" value="Submit">
+		<button type="submit"> Вход </button>
 		<a href="{% url 'user_registration'%}">Registration</a>
 	</form>	
 {%endblock%}

@@ -1,18 +1,15 @@
 {% extends 'base.html' %}
 
+
+
 {% block head_title %}
 	{{note.title}}
 {% endblock %}
-{% block navigation %}
-	{% for notes in navigation %}
-		<a href='{{ notes.get_absolute_url }}'>{{ notes.title }}</a><br>
-	{% endfor %}
-{% endblock %}
+
 
 
 {% block notes %}
 		<div >
 			<p>{{ note.body }}</p>
 		</div>
-	
 {% endblock %}
