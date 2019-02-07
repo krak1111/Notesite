@@ -45,8 +45,8 @@ class Section(models.Model):
 	title = models.CharField(max_length = 50)
 	description = models.CharField (max_length = 200)
 	global_id = models.CharField(max_length = 200, unique = True)	
-	child_index = models.IntegerField()
-	num_child = models.IntegerField()
+	child_index = models.IntegerField(blank = True)
+	num_child = models.IntegerField(blank = True)
 
 	#Relationship
 	creator = models.ForeignKey(User, 

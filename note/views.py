@@ -107,19 +107,15 @@ class user_register(View):
 		return render(request, 'note/register.html', context)
 
 
-def home_view(request):
-	"""
-		Home page for user
-	"""
-	query_list = list_page(request.user.username)
-	
 
 
 
+def section_view(request, ident):
 
-# def user_note_view(request, **kwargs):
-# 	global_ident = ""
-# 	templ = re.compile(r"\b#(\w+?)\b")
-# 	url_list = templ.findall(global_id)
+	check_user(request)
+
+	global_ident = '%s_%s_%s' %(request.user.username, 'section', ident)
+
+	list_page(global_ident)
 
 	

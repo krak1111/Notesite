@@ -16,46 +16,34 @@ def check_user(request):
 		return redirect('user_login')
 	pass
 
-def list_page( is_note = False, parrent_globalid = None):
+
+def list_page(global_ident):
 	"""
-	Create a list of objects to show on the page
+	Create a unordered list of objects to show on the page
 	"""
-	# Validation url earlier into view
-	try:
-		#Query for the childrens of folder
-		section_query = Section.objects.filter(parrent = parrent_globalid)
+	#Validate an object
+	try:		
+		Section.objects.get(global_id = dlobal_ident)
+
+	except Section.DoesNotExist:
+		redirect ('does_not_exist')
+
+	#prepare a list of queries for display
+	try:	
+		Section_query = Section.objects.filter(parrent = parrent_globalid)
+
 		try:
 			notes_query = Notes.objects.filter(parrent = parrent_globalid)
 			# union a quries
-			union_query = section_query.union(notes_query).order_by('child_index')
+			union_query = section_query.union(notes_query)
 			return union_query
 
 		except Notes.DoesNotExist:
 			return section_query
 
 	except Section.DoesNotExist:
-		try:
-			note_query = Notes.objects.get(global_id = parrent_globalid)
-			return note_query
-		except Notes.DoesNotExist:
-			return None
+		return None
+	
 
-	if is_note:
-		note_query = Notes.objects.get(global_id = parrent_globalid)
-		return note_query
-
-	else:
-		try:
-			section_query = Section.objects.filter(parrent = parrent_globalid)
-			try:
-				notes_query = Notes.objects.filter(parrent = parrent_globalid)
-				# union a quries
-				union_query = section_query.union(notes_query).order_by('child_index')
-				return union_query
-
-			except Notes.DoesNotExist:
-				return section_query
-
-		except  
-
+	
 

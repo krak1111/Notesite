@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User 
+from models import Section
 from django.contrib.auth import authenticate, login
 import re
 
@@ -101,7 +102,11 @@ class user_registration (forms.Form):
 		auth_user = authenticate(**auth_dict)
 		login(request, auth_user)
 
-		
+		user_home_section = Section(title = 'Home', description = 'Home page',
+									global_id = "%s_%s_%s" %(self.cleaned_data['username'], 'section', 'Home'),
+									creator = self.cleaned_data['username'])
+
+		user_home_section.save()
 
 		return auth_user
 
