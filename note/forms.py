@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User 
-from models import Section
+from datetime import date
+# from models import Section
 from django.contrib.auth import authenticate, login
+from utility.forms_func import child_count
 import re
 
 
@@ -102,7 +104,7 @@ class user_registration (forms.Form):
 		auth_user = authenticate(**auth_dict)
 		login(request, auth_user)
 
-		user_home_section = Section(title = 'Home', description = 'Home page',
+		user_home_section = Section.create(title = 'Home', description = 'Home page',
 									global_id = "%s_%s_%s" %(self.cleaned_data['username'], 'section', 'Home'),
 									creator = self.cleaned_data['username'])
 
@@ -131,13 +133,119 @@ class notes_form(forms.Form):
 				or
 			"history. flame. user" 
 		"""
-		full_tag_str = self.clean_data['tags']
+		full_tag_str = self.cleaned_data['tags']
 		reg_template = re.compile(r"\b(\w+?)\b")
 
 		clean_tag_list = reg.template.findall(full_tag_str)
 
 		return clean_tag_list
 
-	def save(self, parrent_globalid = blank, ):
-		pass
+	def clean_title(self):
+		"""Title shouldn't have a #"""
+
+		if '#' or '_' in self.cleaned_data['title']:
+			raise forms.ValidationError("Title shouldn't have a # and _", code = 'not#_')
+		else:
+			return self.cleaned_data['title']
+
+
+	def save(self, username, parrent_global_id):
+		
+		#Class for parrent section
+		parrent_object = Section.objects.get(global_id = parrent_global_id)
+		creator = User.objects.get(username = username)
+
+
+
+		#Global id lookup username_note_title#index (index for title if this title already exist otherwise ='0')
+		k = 0
+		while True:
+			global_ident = '%s_%s_%s', (username, 'note', ('title#%s',(k)))
+			try:				
+				Note.objects.get(global_id = global_ident)
+				k+=1
+			except Notes.DoesNoteExist:
+				break
+
+		create_date = date.today()
+
+		creating_dict = {
+			'title': self.cleaned_data['title'],
+			'body_text': self.cleaned_data['body_text'],
+			'pub_date': create_date,
+			'global_id': global_ident,
+			'child_index': child_count(parrent_global_id),
+			'creator': creator,
+			'parrent':parrent_object
+		}
+		note_object = Note.objects.create(kwargs = creating_dict)
+
+		#Tag binding
+		for current_tag in self.cleaned_data['tags']:
+			try:
+				note_object.tag.add(Tag.objects.get(tag__iexact = current_tag))
+			except Tag.DoesNotExist:
+				new_tag = Tag.objects.create(tag = current_tag).save()
+				note_object.tag.add(new_tag)
+
+		note_object.save()
+
+		return note_object
+
+
+class section_form(forms.Form):
+	"""
+		Form for create a section
+		fields:
+			1. title
+			2. description
+	"""
+	title = forms.CharField(label = 'title', max_length = 50)
+	description = forms.CharField(label = 'description', max_length = 150)
+
+	def clean_title(self):
+		"""Title shouldn't have a # or _"""
+
+		if '#' or '_' in self.cleaned_data['title']:
+			raise forms.ValidationError("Title shouldn't have a # and _", code = 'not#_')
+		else:
+			return self.cleaned_data['title']
+
+
+	def save(self, username, parrent_global_id):
+		
+		#Class for parrent section
+		parrent_object = Section.objects.get(global_id = parrent_global_id)
+		creator = User.objects.get(username = username)
+
+		#Global id lookup username_note_title#index (index for title if this title already exist otherwise ='0')
+		k = 0
+		while True:
+			global_ident = '%s_%s_%s', (username, 'section', ('title#%s',(k)))
+			try:				
+				Section.objects.get(global_id = global_ident)
+				k+=1
+			except Section.DoesNoteExist:
+				break
+
+		
+
+		creating_dict = {
+			'title': self.cleaned_data['title'],
+			'description': self.cleaned_data['description'],
+			'global_id': global_ident,
+			'child_index': child_count(parrent_global_id),			
+			'creator': creator,
+			'parrent':parrent_object
+		}
+		section_object = Section.objects.create(kwargs = creating_dict)
+
+		section_object.save()
+
+		return section_object
+
+
+
+
+
 

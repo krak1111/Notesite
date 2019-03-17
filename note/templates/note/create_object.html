@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block head_title %}
+	{{parrent_object.title}} - create an object
+{% endblock head_title %}
+
+
+{% block notes %}
+	<form action = "{{parrent_object.get_absolute_url_create'}}" method="post" id = "create_form">
+		
+		{% csrf_token %}
+		<div id = "choice">
+		<div class="choice_text">
+			Section or Note?
+		</div>
+		<input type = "checkbox" name = "create_choice" onclick="changeForm()" id = "choise_switcher">
+		</div>
+		<fieldset id = "section_form">
+		{% for er in section_form.non_field_errors %}
+			<div class="errors"> 
+				{{er}} 
+			</div>
+		{% endfor %}
+		
+			{% for field in section_form %}
+				<div class="field_label">
+					{{field_label}}
+				</div>
+				<div class="lable_error">
+					{% if field.errors %}
+						{{field.errors.as_text}}						
+					{% endif %}
+				</div>
+				<div class="body_text_input">
+					{{field}}
+				</div>
+			{% endfor %}
+		</fieldset>	
+
+		<fieldset id = "note_form" disabled>
+		{% for er in note_form.non_field_errors %}
+			<div class="errors"> 
+				{{er}} 
+			</div>
+		{% endfor %}
+		
+			{% for field in note_form %}
+				<div class="field_label">
+					{{field_label}}
+				</div>
+				<div class="lable_error">
+					{% if field.errors %}
+						{{field.errors.as_text}}						
+					{% endif %}
+				</div>
+				<div class="body_text_input">
+					{{field}}
+				</div>
+			{% endfor %}
+		</fieldset>
+	</form>
+	
+{% endblock notes %}
+
+{% block specialJScripts %}
+	<script type="text/javascript" src="{% static 'note/scripts/create_choice.js' %}"></script>
+{% endblock specialJScripts %}

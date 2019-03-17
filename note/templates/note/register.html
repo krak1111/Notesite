@@ -8,7 +8,9 @@
 	<form action="{% url 'user_registration' %}" method="post" accept-charset="utf-8">
 		{% csrf_token %}
 		{% for er in form.non_field_errors %}
-			<div id="errors">{{ er }}</div>
+			<div id="errors">
+				{{ er }}
+			</div>
 		{% endfor %}
 		<fieldset>
 			{% for field in form %}

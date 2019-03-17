@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from .models import *
 from .forms import *
-from .views_func import *
+from utility.views_func import *
 
 def index(request):
 	"""
@@ -17,34 +17,6 @@ def index(request):
 	context = {'notes':notes,
 				'user': request.user}
 	return render(request, 'note/index.html', context)
-
-#Note page view, with menu
-def note_view(request,slug):
-	try:
-		note = note_model.objects.get(slug__iexact=slug)
-		
-	except note_model.DoesNotExist:
-		return redirect('main')
-	
-	notes = note_model.objects.all()
-	context = {
-		'notes':notes,
-		'note': note,
-		'user': request.user
-		}
-	return render(request, 'note/note_page.html', context)
-	
-
-class log_out(View):
-	"""
-	Log out link
-	"""
-	def get(self, request):
-		return render(request, 'note/logout.html',{})
-
-	def post(self, request):
-		logout(request)
-		return redirect('main')
 
 #Log In view
 class user_login(View):
@@ -77,6 +49,18 @@ class user_login(View):
 						'error': True
 			}
 			return render(request,'note/login.html',context)
+
+#Log out
+class log_out(View):
+	"""
+	Log out link
+	"""
+	def get(self, request):
+		return render(request, 'note/logout.html',{})
+
+	def post(self, request):
+		logout(request)
+		return redirect('main')
 		
 #Registration
 class user_register(View):
@@ -107,15 +91,95 @@ class user_register(View):
 		return render(request, 'note/register.html', context)
 
 
-
-
-
 def section_view(request, ident):
 
 	check_user(request)
 
 	global_ident = '%s_%s_%s' %(request.user.username, 'section', ident)
 
-	list_page(global_ident)
-
+	query_list = list_page(global_ident)
 	
+	context = {'content_objects': query_list,}
+
+	if query_list:
+		return render(request, 'note/section.html', context)
+	else:
+		return redirect('does_not_exist', kwargs = {'obj_type': 'section'})
+
+
+def tag_display(request, s_tag):
+	""" Tag searching"""
+	check_user(request)
+
+	try:
+		context = {'content_objects': Notes.objects.filter(tag__iexact = s_tag)}
+		return render(request, 'note/tag.html', context)
+	except Notes.DoesNotExist:
+		return redirect('does_not_exist', kwargs = {'obj_type': 'tag'})
+
+
+def not_exist(request, obj_type):
+	"""Page display a wrong searching"""
+	check_user(request)
+
+	context = {'obj_type': obj_type}
+
+	return render(request, 'note/does_not_exist.html', context)
+
+
+class create_view(View):
+	"""
+		View for object creating.
+		Page include a choice (section or note)
+	"""
+	def get(self, request, ident):
+
+		check_user(request)
+
+		try:
+			parrent_section = Section.objects.get(global_id = '%s_%s_%s', (request.user.username, 'section',ident))
+		except Section.DoesNotExist:
+			return redirect('does_not_exist', kwargs = {'obj_type': 'section'})
+
+		context = {
+			'note_form': note_form(),
+			'section_form': section_form(),
+			'parrent_section': parrent_section,
+		}
+
+		return render(request, 'note/create_object.html', context)
+
+	def post(self, request, ident):
+
+		check_user(request)
+		global_ident = '%s_%s_%s', (request.user.username, 'section',ident)
+
+		#
+		try:
+			parrent_section = Section.objects.get(global_id = global_ident)
+		except Section.DoesNotExist:
+			return redirect('does_not_exist', kwargs = {'obj_type': 'section'})
+		
+		clear_from_csrf(request.POST)
+
+		#Initilization which form was send
+		try:
+
+
+		
+
+
+
+#Note page view, with menu
+def note_view(request, ident):
+	""" View for single note """
+	check_user(request)
+
+	global_ident = '%s_%s_%s', (request.user.username,'note', ident)
+	
+	try:
+		note_query = Notes.objects.get(global_id = global_ident)
+		context = {'content_objects': note_query}
+		return render(request, 'note/note_page.html', context)
+	except:
+		return redirect('does_not_exist', kwargs = {'obj_type':'note'})

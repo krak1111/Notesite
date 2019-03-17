@@ -1,7 +1,7 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth.models import User 
-from django.utils import timezone
+
 
 
 
@@ -14,17 +14,22 @@ class note_model(models.Model):
 	#creator = models.CharField(max_length=50)
 
 	def get_absolute_url(self):
-		return reverse('note_detail', kwargs={'slug' : self.slug})
+		return reverse('note_detail', kwargs = {'slug' : self.slug})
 
 
 	def __str__(self):
 		return self.title
+
+
 
 class Tag(models.Model):
 	"""
 	Tag for notes for searching
 	"""
 	tag = models.CharField(max_length = 50)
+
+	def get_absolute_url(self):
+		return reverse('tag_display', kwargs = {'tag': tag})
 
 
 class Section(models.Model):
@@ -43,10 +48,10 @@ class Section(models.Model):
 	"""
 
 	title = models.CharField(max_length = 50)
-	description = models.CharField (max_length = 200)
+	description = models.CharField (max_length = 200, blank = True)
 	global_id = models.CharField(max_length = 200, unique = True)	
 	child_index = models.IntegerField(blank = True)
-	num_child = models.IntegerField(blank = True)
+	
 
 	#Relationship
 	creator = models.ForeignKey(User, 
@@ -57,8 +62,12 @@ class Section(models.Model):
 								blank = True)
 
 	def get_absolute_url(self):
-		id_list = global_id.split(.)
+		id_list = global_id.split('_')
 		return reverse('section_view', kwargs = {'ident': id_list[2]})
+
+	def get_absolute_url_create(self):
+		id_list = global_id.split('_')
+		return reverse('creating_object', kwargs = {'ident': id_list[2]})
 
 
 class Notes(models.Model):
@@ -76,7 +85,7 @@ class Notes(models.Model):
 		9. tag - Many to Many relationship with tags
 	"""
 	title = models.CharField(max_length =  50)
-	body_text = models.CharField(max_length = 500)
+	body_text = models.CharField(max_length = 500, blank = True)
 	pub_date = models.DateField(auto_now = True)
 	global_id = models.CharField(max_length = 200, unique = True)
 	child_index = models.IntegerField()
@@ -92,7 +101,7 @@ class Notes(models.Model):
 	tag = models.ManyToManyField(Tag)
 
 	def get_absolute_url(self):
-		id_list = global_id.split(.)
+		id_list = global_id.split('_')
 		return reverse('object_view', kwargs = {'ident': id_list[2]})
 
 

@@ -1,0 +1,22 @@
+{extends 'base.html'}
+
+{% block content %}
+	{% for obj in content_objects) %}
+		<div>	
+			{% if  (obj | obj_type) == 'note' %}
+				<div class="note_title"> {{obj.title}}</div>
+				<div class="note_body">{{obj.body}}</div>
+				{% if obj.tag %}
+					<div class="note_tags">
+						{% for tag in obj.tag %}
+							#<a href='{{tag.get_absolute_url}}'>{{tag}}</a>, 
+						{% endfor %}
+					</div>		
+				{% endif %}
+			{% else %}
+				<div class="section_title">{{obj.title}}</div>
+				<div class="section_description">{{obj.description}}</div>
+			{% endif %}	
+	    </div>
+	{% endfor %}
+{% endblock %}
